@@ -20,18 +20,22 @@ def filter_bam_file_by_perc_map(fasta_filepath, bam_filepath, perc_threshold=0.3
         diffs_perc = []
         reads_excluded = 0
         for total,r in enumerate(bam):
-            if r.reference_name in rl:
-                # it is in the white list...evaluate diffs into mapped read and len of 
-                # transcript for the curre read
-                fasta_ref = fasta.fetch(r.reference_name)
-                diff = len(fasta_ref)-r.reference_length
-                diff_perc = diff/len(fasta_ref)
-                diffs_perc.append(diff_perc)
-                if diff_perc >= perc_threshold:
+            if not r.is_unmapped:
+                if r.reference_name in rl:
+                    # it is in the white list...evaluate diffs into mapped read and len of 
+                    # transcript for the curre read
+                    fasta_ref = fasta.fetch(r.reference_name)
+                    diff = len(fasta_ref)-r.reference_length
+                    diff_perc = diff/len(fasta_ref)
+                    diffs_perc.append(diff_perc)
+                    if diff_perc >= perc_threshold:
+                        reads_to_exclude.write(r.qname+"\n")
+                        reads_excluded += 1
+                else:
+                    # not in the whitelist
                     reads_to_exclude.write(r.qname+"\n")
                     reads_excluded += 1
             else:
-                # not in the whitelist
                 reads_to_exclude.write(r.qname+"\n")
                 reads_excluded += 1
 
@@ -42,11 +46,15 @@ def filter_bam_file_by_perc_map(fasta_filepath, bam_filepath, perc_threshold=0.3
         diffs_perc = []
         reads_excluded = 0
         for total,r in enumerate(bam):
-            fasta_ref = fasta.fetch(r.reference_name)
-            diff = len(fasta_ref)-r.reference_length
-            diff_perc = diff/len(fasta_ref)
-            diffs_perc.append(diff_perc)
-            if diff_perc >= perc_threshold:
+            if not r.is_unmapped:
+                fasta_ref = fasta.fetch(r.reference_name)
+                diff = len(fasta_ref)-r.reference_length
+                diff_perc = diff/len(fasta_ref)
+                diffs_perc.append(diff_perc)
+                if diff_perc >= perc_threshold:
+                    reads_to_exclude.write(r.qname+"\n")
+                    reads_excluded += 1
+            else:
                 reads_to_exclude.write(r.qname+"\n")
                 reads_excluded += 1
 
@@ -71,7 +79,7 @@ def filter_bam_file_by_perc_map(fasta_filepath, bam_filepath, perc_threshold=0.3
     os.system(f"rm {reads_to_exclude_filepath}")
     os.system(f"rm {output_bam+'.excluded'}")
     os.system(f"samtools index {output_bam}")
-    print(f"[{datetime.now()}] Computation finished.")
+    print(f"[{datetime.now()}] Computation finished.", flush=True)
 
 
 if __name__ == "__main__":
