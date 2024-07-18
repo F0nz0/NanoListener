@@ -75,90 +75,94 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
         cons_list = [os.path.join(nanolistener_chunks_dir, f"cons_{id}.tsv") for id in range(1,cons_out_n+1)]
     print(f"[{datetime.now()}] Consumer output tsv used:\n{[os.path.basename(_) for _ in cons_list]}")
     for c,cons_out in enumerate(cons_list):
-        print(f"\n##########################################",flush=True)
-        print(f"##########################################",flush=True)
-        print(f"[{datetime.now()}] Consumer Output tsv {c+1} out of {len(cons_list)}.\n\t- Elapsed time: {datetime.now()-start_time}.")
-        print(f"[{datetime.now()}] Processing consumers output at: {cons_out}.", flush=True)
-        # detect chunks length
-        lens = [int(i) for i in os.path.basename(nanolistener_chunks_dir).split(".")[-2].split("to")]
-        print(f"[{datetime.now()}] Chunks min and Max lengths detected:", lens, flush=True)
-        # load data chuncks
-        print(f"[{datetime.now()}] Loading consumer output in memory.", flush=True)
-        df = pd.read_table(cons_out, header=None)
-        # scale to 5k-long chunks if needed
-        if lens[1] < target_max_len:
-            print(f"[{datetime.now()}] Lengthening of chunks needed from {lens[1]} to {target_max_len}.", flush=True)
-            df = lengthen_chunks(df, targent_len=target_max_len, input_chunk_len=lens[1])
-        # select only chunks containing modified base if requested
-        if mod_base:
-            print(f"[{datetime.now()}] Retaining only chunks with at least one {mod_base}. Starting shape: {df.shape}.")
-            df = df[df.iloc[:,-1].str.contains(mod_base)].copy()
-            print(f"[{datetime.now()}] df shape after mod_base containing chunks selection: {df.shape}.")
-        # remove duplicates
-        df.drop_duplicates(inplace=True)
-        df.reset_index(inplace=True, drop=True)
-        print(f"[{datetime.now()}] df shape after duplicates removal:", df.shape, flush=True)
-        # retain only lengths within an interval
-        if kmer_len_interval:
-            print(f"[{datetime.now()}] Filtering out chunks outsite the given kmer length [min,max]: {kmer_len_interval}.", flush=True)
-            df = df[(df.iloc[:,-1].apply(len)>=kmer_len_interval[0])&(df.iloc[:,-1].apply(len)<=kmer_len_interval[1])].copy()
-            print(f"[{datetime.now()}] df shape after seqs length filtering:", df.shape, flush=True)
-        # balancing
-        # 0: no balancing, 1: balancing on regions
-        if balancing_strategy != 0:
-            print(f"[{datetime.now()}] Balancing of chunks requested with strategy: {balancing_strategy}", flush=True)
-            if balancing_strategy == 1:
-                print(f"[{datetime.now()}] Balancing chunks on regions...", flush=True)
-                df = df.groupby(df.shape[1]-8)
-                df = df.apply(lambda x: x.sample(df.size().min())).reset_index(drop=True)
-        print(f"[{datetime.now()}] df stats after filtering (start coords stats):\n", df.groupby(df.shape[1]-8)[df.shape[1]-7].describe(), flush=True)
-        print(f"[{datetime.now()}] df shape after filtering:", df.shape, flush=True)
-        # if needed select a ranodom sample with n chunks
-        if sample_n:
-            if sample_n < df.shape[0]:
-                print(f"[{datetime.now()}] Sampling a random sample of chunks: {sample_n}")
-                df = df.sample(n=sample_n, ignore_index=True)
-                print(f"[{datetime.now()}] df shape after random sampling: {df.shape}")
+        try:
+            print(f"\n##########################################",flush=True)
+            print(f"##########################################",flush=True)
+            print(f"[{datetime.now()}] Consumer Output tsv {c+1} out of {len(cons_list)}.\n\t- Elapsed time: {datetime.now()-start_time}.")
+            print(f"[{datetime.now()}] Processing consumers output at: {cons_out}.", flush=True)
+            # detect chunks length
+            lens = [int(i) for i in os.path.basename(nanolistener_chunks_dir).split(".")[-2].split("to")]
+            print(f"[{datetime.now()}] Chunks min and Max lengths detected:", lens, flush=True)
+            # load data chuncks
+            print(f"[{datetime.now()}] Loading consumer output in memory.", flush=True)
+            df = pd.read_table(cons_out, header=None)
+            # scale to 5k-long chunks if needed
+            if lens[1] < target_max_len:
+                print(f"[{datetime.now()}] Lengthening of chunks needed from {lens[1]} to {target_max_len}.", flush=True)
+                df = lengthen_chunks(df, targent_len=target_max_len, input_chunk_len=lens[1])
+            # select only chunks containing modified base if requested
+            if mod_base:
+                print(f"[{datetime.now()}] Retaining only chunks with at least one {mod_base}. Starting shape: {df.shape}.")
+                df = df[df.iloc[:,-1].str.contains(mod_base)].copy()
+                print(f"[{datetime.now()}] df shape after mod_base containing chunks selection: {df.shape}.")
+            # remove duplicates
+            df.drop_duplicates(inplace=True)
+            df.reset_index(inplace=True, drop=True)
+            print(f"[{datetime.now()}] df shape after duplicates removal:", df.shape, flush=True)
+            # retain only lengths within an interval
+            if kmer_len_interval:
+                print(f"[{datetime.now()}] Filtering out chunks outsite the given kmer length [min,max]: {kmer_len_interval}.", flush=True)
+                df = df[(df.iloc[:,-1].apply(len)>=kmer_len_interval[0])&(df.iloc[:,-1].apply(len)<=kmer_len_interval[1])].copy()
+                print(f"[{datetime.now()}] df shape after seqs length filtering:", df.shape, flush=True)
+            # balancing
+            # 0: no balancing, 1: balancing on regions
+            if balancing_strategy != 0:
+                print(f"[{datetime.now()}] Balancing of chunks requested with strategy: {balancing_strategy}", flush=True)
+                if balancing_strategy == 1:
+                    print(f"[{datetime.now()}] Balancing chunks on regions...", flush=True)
+                    df = df.groupby(df.shape[1]-8)
+                    df = df.apply(lambda x: x.sample(df.size().min())).reset_index(drop=True)
+            print(f"[{datetime.now()}] df stats after filtering (start coords stats):\n", df.groupby(df.shape[1]-8)[df.shape[1]-7].describe(), flush=True)
+            print(f"[{datetime.now()}] df shape after filtering:", df.shape, flush=True)
+            # if needed select a ranodom sample with n chunks
+            if sample_n:
+                if sample_n < df.shape[0]:
+                    print(f"[{datetime.now()}] Sampling a random sample of chunks: {sample_n}")
+                    df = df.sample(n=sample_n, ignore_index=True)
+                    print(f"[{datetime.now()}] df shape after random sampling: {df.shape}")
+                else:
+                    print(f"[{datetime.now()}] Provided 'sample_n' {sample_n} less than chunks for this consumer. All the chunks will be retained.")
+            # split X and y_meta
+            print(f"[{datetime.now()}] Shuffling and splitting into data and metadata dataframes.", flush=True)
+            X = df.iloc[:,:target_max_len].values
+            y_meta = df.iloc[:,target_max_len:]
+            y_meta = y_meta[y_meta.columns[[0,1,2,5,6,7]]].copy()
+            y_meta.columns = [c for c in range(target_max_len,target_max_len+6)]
+            # delete df to spare memory
+            del(df)
+            # split training and test sets
+            print(f"[{datetime.now()}] Splitting into training and test datasets.", flush=True)
+            X_train, X_test, y_train_meta, y_test_meta = train_test_split(X, y_meta, test_size=train_test_ratio, shuffle=True, random_state=24)
+            # delete to spare memory
+            del(X, y_meta)
+            print("X_train, X_test, y_train_meta, y_test_meta shapes", X_train.shape, X_test.shape, y_train_meta.shape, y_test_meta.shape)
+            # save to disk training a test datasets
+            print(f"[{datetime.now()}] Appending to disk at paths:", flush=True)
+            print(f"\tX_train --> {X_train_output_path}", flush=True)
+            print(f"\tX_test --> {X_test_output_path}", flush=True)
+            print(f"\ty_train_meta --> {y_train_meta_output_path}", flush=True)
+            print(f"\ty_test_meta --> {y_test_meta_output_path}", flush=True)
+            # save Xtrain
+            with open(X_train_output_path, 'a') as out:
+                np.savetxt(out, X_train, delimiter='\t')
+            # save y_train_meta (header only first consumer)
+            if c == 0:
+                y_train_meta.to_csv(y_train_meta_output_path, sep='\t', mode="a")
             else:
-                print(f"[{datetime.now()}] Provided 'sample_n' {sample_n} less than chunks for this consumer. All the chunks will be retained.")
-        # split X and y_meta
-        print(f"[{datetime.now()}] Shuffling and splitting into data and metadata dataframes.", flush=True)
-        X = df.iloc[:,:target_max_len].values
-        y_meta = df.iloc[:,target_max_len:]
-        y_meta = y_meta[y_meta.columns[[0,1,2,5,6,7]]].copy()
-        y_meta.columns = [c for c in range(target_max_len,target_max_len+6)]
-        # delete df to spare memory
-        del(df)
-        # split training and test sets
-        print(f"[{datetime.now()}] Splitting into training and test datasets.", flush=True)
-        X_train, X_test, y_train_meta, y_test_meta = train_test_split(X, y_meta, test_size=train_test_ratio, shuffle=True, random_state=24)
-        # delete to spare memory
-        del(X, y_meta)
-        print("X_train, X_test, y_train_meta, y_test_meta shapes", X_train.shape, X_test.shape, y_train_meta.shape, y_test_meta.shape)
-        # save to disk training a test datasets
-        print(f"[{datetime.now()}] Appending to disk at paths:", flush=True)
-        print(f"\tX_train --> {X_train_output_path}", flush=True)
-        print(f"\tX_test --> {X_test_output_path}", flush=True)
-        print(f"\ty_train_meta --> {y_train_meta_output_path}", flush=True)
-        print(f"\ty_test_meta --> {y_test_meta_output_path}", flush=True)
-        # save Xtrain
-        with open(X_train_output_path, 'a') as out:
-            np.savetxt(out, X_train, delimiter='\t')
-        # save y_train_meta (header only first consumer)
-        if c == 0:
-            y_train_meta.to_csv(y_train_meta_output_path, sep='\t', mode="a")
-        else:
-            y_train_meta.to_csv(y_train_meta_output_path, sep='\t', mode="a", header=False)
-        # save Xtest
-        with open(X_test_output_path, 'a') as out:
-            np.savetxt(out, X_test, delimiter='\t')
-        # save y_test_meta (header only first consumer)
-        if c == 0:    
-            y_test_meta.to_csv(y_test_meta_output_path, sep='\t', mode="a")
-        else:
-            y_test_meta.to_csv(y_test_meta_output_path, sep='\t', mode="a", header=False)
-
-    print(f"[{datetime.now()}] Computation finished. Elapsed time: {datetime.now()-start_time}.")
+                y_train_meta.to_csv(y_train_meta_output_path, sep='\t', mode="a", header=False)
+            # save Xtest
+            with open(X_test_output_path, 'a') as out:
+                np.savetxt(out, X_test, delimiter='\t')
+            # save y_test_meta (header only first consumer)
+            if c == 0:    
+                y_test_meta.to_csv(y_test_meta_output_path, sep='\t', mode="a")
+            else:
+                y_test_meta.to_csv(y_test_meta_output_path, sep='\t', mode="a", header=False)
+        except Exception as e:
+            print(f"[{datetime.now()}] ERROR!!! PROBLEM WITH CURRENT NanoListener CONSUMER {c+1} THIS CONSUMER OUTPUT WILL BE SKIPPED.", flush=True) 
+            print(f"[{datetime.now()}] Expetion Raised:", e, flush=True)
+            continue
+    print(f"[{datetime.now()}] Computation finished. Elapsed time: {datetime.now()-start_time}.", flush=True)
 
 
 if __name__ == "__main__":
