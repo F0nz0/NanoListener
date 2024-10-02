@@ -25,6 +25,7 @@ def decode_seq(poss, refs):
     return seq
 
 
+# defining useful functions to handle with fast5 files
 def raw_to_pA(f5):
     '''
     Function to transform back from raw signal to pA scale.
@@ -37,7 +38,6 @@ def raw_to_pA(f5):
         print("AN EXCEPTION HAS OCCURRED!\n", e, flush=True)
 
 
-# defining useful functions to handle with fast5 files
 def retrieve_read_pA_fastq_from_fast5(fast5_fullpath, read_name_id):
     '''
     Retrieve fastq and pA converted data related to a given readname_id from a fast5 file 
@@ -50,6 +50,19 @@ def retrieve_read_pA_fastq_from_fast5(fast5_fullpath, read_name_id):
             pA_data = raw_to_pA(r)
             fastq = r.get_analysis_dataset("Basecall_1D_000/BaseCalled_template", "Fastq")
     return pA_data, fastq
+
+
+# defining useful functions to handle with pod5 files
+def retrieve_read_pA_from_pod5(pod5_fullpath, read_name_id):
+    with pod5.Reader(pod5_fullpath) as reader:
+        for read in reader.reads([read_name_id]):
+            if str(read.read_id) == read_name_id:
+                signal = read.signal
+                raw_unit = read.calibration.scale
+                offset = read.calibration.offset
+                pA_signal = (offset + signal) * raw_unit
+                return pA_signal
+
 
 def producer(eventalign_path, q, threads_n, n_reads_to_process_per_region, regions):
     '''
