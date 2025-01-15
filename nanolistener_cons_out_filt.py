@@ -116,6 +116,7 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
             print(f"[{datetime.now()}] df shape after filtering:", df.shape, flush=True)
             # if needed select a ranodom sample with n chunks
             if sample_n:
+                #print(type(sample_n)) #### DEVELOPMENT/TEST
                 if sample_n < df.shape[0]:
                     print(f"[{datetime.now()}] Sampling a random sample of chunks: {sample_n}")
                     df = df.sample(n=sample_n, ignore_index=True)
@@ -217,6 +218,7 @@ if __name__ == "__main__":
                         "--sample_n",
                         required=False,
                         default=None,
+                        type=int,
                         help=f"-sample_n: \t a <int> indicating the number of chunks to sample randomly. [None]")
 
     
