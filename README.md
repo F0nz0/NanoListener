@@ -219,9 +219,9 @@ The *nanolistener_cons_out_filt.py* script saves output training and test datase
 
 It's very likely that the final training dataset will be composed of a combination of different organisms and runs so, because of that, an additional accessory script is provided to unify filtered training/test datasets into a single tabular file, ready to be used for training and testing purposes. This is the *make_global_dataset.py* accessory script, which takes in input this mandatory arguments:
 
-  	 python3 nanolistener_cons_out_filt.py $1 $2 $3 $4 $5
+  	 python3 make_global_dataset.py $1 $2 $3 $4 $5
 
-    	 where arguments are:
+    	 where the 4 arguments are:
 
   	 1) single_datasets_list_fp ===> a csv with one row for every dataset to be merged and 2 columns containing:
     					 A) the sample/run name, B) the full-path to the NanoListener directory with X_* / y_* filtered files;
