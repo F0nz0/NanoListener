@@ -60,7 +60,7 @@ After the activation of the conda enviroment install the following softwares:
 		python -m pip install -r requirements.txt
 
 ## **Basic Usage**:
-NanoListener has 1 main scripts that is **NanoListener.py** and 4 accessory scripts used for preliminary preprocessing of input data and post-processing of output datasets. 
+NanoListener has 1 main script that is **NanoListener.py** and 4 accessory scripts used for preliminary preprocessing of input data and post-processing of output datasets. 
 
 The first step is to obtain fast5 files (or converted pod5 via pod5 library at https://pod5-file-format.readthedocs.io/en/0.1.21/docs/tools.html#pod5-convert-to-fast5). Then these raw data have to be basecalled into fastQ files by a basecaller model (either modification -unaware or -aware, for recursive trainings) and mapped against reference sequences: we stronly suggest to use reference transcriptomes to avoid introns in interrupted genes. Alignments in BAM format then need to be filtered out from supplemenary and secondary alignments retaining only reads mapped on the forward strand. These BAM files then can be further filtered using NanoListener accessory scripts depending on the experimental design.
 
