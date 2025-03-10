@@ -164,7 +164,7 @@ At the end of f5c computation, the eventalign table and its summary table will b
 	                        -outdir_prefix: a <str> indicating the ouput directory prefix to use. By default the eventalign basename will be used
 	                        as prefix. [None]
 
-To annotate k-mers of each chunks for modified nucleotides, NanoListener expects in input the full-path for the directory containing tsv files with all the known positions for alternative bases, and its symbol (1 or more modification can be used) at a per-read level. Counterwise, it will work in un-modifided mode. The tsv files (one for every read) have to be named as *<read_id>.tsv* and respect the following content where the first 2 columns indicate the mapping coordinates (0-based) and the third one a given char for each expected modification:
+To annotate k-mers of each chunks for modified nucleotides, NanoListener expects in input the full-path for a directory containing tsv files with all the known positions for alternative bases, and their symbols (1 or more modifications can be used) at a per-read level. Counterwise, it will work in un-modifided mode. The tsv files (one for every read) have to be named as *<read_id>.tsv* and respect the following content where the first 2 columns indicate the mapping coordinates (0-based) and the third one a given char for each expected modification:
 
 	Curlcake1	17	Y
 	Curlcake1	21	I
