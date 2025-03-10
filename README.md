@@ -237,7 +237,8 @@ In the output folder <outdir> the final merged, shuffled and consolidated traini
 The final datasets is ready to be used to train modification-aware (or unaware if NanoListener has been used in unmodified mode without per-read tables) basecalling models for dRNA experiments (R9 or RNA004).
 
 
-## We are open to collaboration! 
+## **We are open to collaborations!**
+
 If you are in trouble, or if you are interested in applying our system to your use cases, please contact adriano.fonzino@uniba.it or ernesto.picardi@uniba.it
 
 ## **Additional Information**
