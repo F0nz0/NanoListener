@@ -235,3 +235,16 @@ In the output folder <outdir> the final merged, shuffled and consolidated traini
 	<outdir>/concat.x_y_meta.<dataset_group>.shuffled.tsv
 
 The final datasets is ready to be used to train modification-aware (or unaware if NanoListener has been used in unmodified mode without per-read tables) basecalling models for dRNA experiments (R9 or RNA004).
+
+
+## We are open to collaboration! 
+If you are in trouble, or if you are interested in applying our system to your use cases, please contact adriano.fonzino@uniba.it or ernesto.picardi@uniba.it
+
+## **Additional Information**
+
+### **Terms and Licence**:
+All the provided models work only for the Nanopore libraries produced by ONT SQK-RNA001 and SQK-RNA002 kits. Even if hundreds if not thousands of dRNA runs with these old chemistry are available and can be re-basecalled using NanoSpeech, we are committed to make the upgrade with the newest 004 pore. A pilot model for pore RNA004 trained only on curlcakes in-vitro transcribed synthetic molecules is provided but generalization capacities are not ensured. 
+
+Research Purpose Only.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
