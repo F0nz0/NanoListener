@@ -5,21 +5,12 @@
 </p>
 
 <p align="justify">
-NanoListener is a small suite of Python scripts to create training datasets for training direct-RNA modification-aware basecaller models. 
-Raw signals stored in fast5, or converted pod5 files, are basecalled via modification-unaware basecalling models and mapped against reference sequences. 
-Alignments are filtered collecting reads falling on regions of interest and respecting strict criteria, using NanoListener accessory scripts. 
-Ionic currents needs to be re-squiggled onto the reference via f5c eventalign. 
-  NanoListener takes advantage of these re-squiggled signals to retrieve context information and extract random chunks of electric measurements trying to avoid problematic 
-  regions (in red) due to modified nucleotides. 
-  It randomly exploits as anchors, low-noise “unmodified” flanking regions to extract whole raw signals from fast5, filling in turn, re-squiggling gaps. 
-  For every extracted chunk, the deduced k-mer is marked for modified nucleotides in accordance with tables of per-read modification positions. 
-Finally, a training dataset is returned, consisting in pairs of chunks/annotated k-mers where a padding is added to currents measurements making these, uniform in length. 
-NanoListener needs positional information, at a per-read level, to annotate all the output k-mers. 
-  These can be obtained either using synthetic in-vitro transcribed molecules or using other orthogonal methods. 
+NanoListener is a small suite of Python scripts to create custrom datasets for training direct-RNA modification-aware basecaller models. Raw signals stored in fast5, or converted pod5 files, are basecalled via modification-unaware basecalling models and mapped against reference sequences. Alignments are filtered collecting reads falling on regions of interest and respecting strict criteria, using NanoListener accessory scripts. 
+Ionic currents needs to be re-squiggled onto the reference via f5c eventalign. NanoListener takes advantage of these re-squiggled signals to retrieve context information and extract random chunks of electric measurements trying to avoid problematic regions (in red) due to modified nucleotides. It randomly exploits as anchors, low-noise “unmodified” flanking regions to extract whole raw signals from fast5, filling in turn, re-squiggling gaps. For every extracted chunk, the deduced k-mer is marked for modified nucleotides in accordance with tables of per-read modification positions. Finally, a training dataset is returned, consisting in pairs of chunks/annotated k-mers where a padding is added to currents measurements making these, uniform in length. NanoListener needs positional information, at a per-read level, to annotate all the output k-mers. These can be obtained either using synthetic in-vitro transcribed molecules or using other orthogonal methods. 
 </p>
 
-## **Required Softwares**:
-NanoSpeech uses internally (and not) some software that should be installed preferably into a new conda enviroment. \
+## **Required Software**:
+NanoListener uses internally (and not) some software that should be installed preferably into a new conda enviroment. \
 After the activation of the conda enviroment install the following softwares:
 1) Python >= 3.9
 2) Samtools >= 1.21
@@ -49,7 +40,7 @@ After the activation of the conda enviroment install the following softwares:
 		# install f5c
 		conda install -c bioconda f5c == 1.5
 
-		# create virtual environment inside Conda NanoSpeech env
+		# create virtual environment inside Conda NanoListener environment
 		python3 -m venv NanoListener_venv
 
 4) Activate the venv:
@@ -64,24 +55,20 @@ After the activation of the conda enviroment install the following softwares:
     	
 		pip install wheel
     
-7) Install required Python packages using the requirements_latest_tf_2_7_0.txt file:
+7) Install required Python packages using the requirements.txt file:
     
 		python -m pip install -r requirements.txt
 
 ## **Basic Usage**:
 NanoListener has 1 main scripts that is **NanoListener.py** and 4 accessory scripts used for preliminary preprocessing of input data and post-processing of output datasets. 
 
-The first step is to obtain fast5 files (or converted pod5 via pod5 library at https://pod5-file-format.readthedocs.io/en/0.1.21/docs/tools.html#pod5-convert-to-fast5). Then these raw data have to be basecalled into fastQ files by a basecaller model (either modification -unaware or -aware, for recursive trainings) and mapped against reference sequences: we stronly suggest to use reference transcriptomes to avoid introns in interrupted genes. Alignments in BAM format then needs to be filtered out from supplemenary and secondary alignments retaining only reads mapped on the forward strand. These BAM files then can be further filtered using NanoListener accessory scripts depending on the experimental design.
+The first step is to obtain fast5 files (or converted pod5 via pod5 library at https://pod5-file-format.readthedocs.io/en/0.1.21/docs/tools.html#pod5-convert-to-fast5). Then these raw data have to be basecalled into fastQ files by a basecaller model (either modification -unaware or -aware, for recursive trainings) and mapped against reference sequences: we stronly suggest to use reference transcriptomes to avoid introns in interrupted genes. Alignments in BAM format then need to be filtered out from supplemenary and secondary alignments retaining only reads mapped on the forward strand. These BAM files then can be further filtered using NanoListener accessory scripts depending on the experimental design.
 
 
 The first (facultative) accessory script which can be used is *create_transcript_white_list.py*. It allows to retrieve reference regions respecting a set of given criteria and takes as input the following parameters:
 
 	python3 create_transcript_white_list.py -h
-	usage: create_transcript_white_list.py [-h] -b BAM_FILEPATH [-l MIN_LEN] [-c MIN_COV] [-r MIN_NUMREADS] [-d MIN_MEANDEPTH] [-q MIN_MEANBASEQ]
-	                                       [-mp MIN_MEANMAPQ]
-	
-	create_transcript_white_list
-	
+
 	optional arguments:
 	  -h, --help            show this help message and exit
 	  -b BAM_FILEPATH, --bam_filepath BAM_FILEPATH
@@ -100,13 +87,9 @@ The first (facultative) accessory script which can be used is *create_transcript
 	  -mp MIN_MEANMAPQ, --min_meanmapq MIN_MEANMAPQ
 	                        minimum average mapping quality per transcript [40]
 
-The output of the *create_transcript_white_list.py* script is a white-list of reference regions/transcripts where NanoListener will focuses its computations. This list can be feed to the second NanoListerer accessory script, *filter_bam_file_for_training_dataset.py* which will produce a filtered BAM files containgin only reads covering a minimum percentage of the corresponding reference sequence. It can be run as following:
+The output of the *create_transcript_white_list.py* script is a white-list of reference regions/transcripts where NanoListener will focuse its computations. This list can be feed to the second NanoListerer accessory script, *filter_bam_file_for_training_dataset.py* which will produce a filtered BAM file containing only reads covering a minimum percentage of the corresponding reference sequence. It can be run as following:
 
 	python3 filter_bam_file_for_training_dataset.py -h
-	usage: filter_bam_file_for_training_dataset.py [-h] -f FASTA_FILEPATH -b BAM_FILEPATH [-t PERC_THRESHOLD] [-r REGION_WHITELIST]
-	                                               [-o FILT_BAM_FILE_SUFFIX]
-	
-	filter_bam_file_by_perc_map
 	
 	optional arguments:
 	  -h, --help            show this help message and exit
@@ -124,7 +107,7 @@ The output of the *create_transcript_white_list.py* script is a white-list of re
 	                        --filt_bam_file_suffix: a <str> optional indicating the suffix to be used to write the filtered BAM output file on
 	                        disk.. [None]
 
-After that, a filtered BAM file containg reads falling on the regions white-list and covering a given minimum percentage of the reference sequence will be retrieved and collected into the filtered output BAM file. The subsequent step is to launch f5c eventalign (Gamaarachchi et al., 2020, GitHub: https://github.com/hasindu2008/f5c) on the filtered BAM file to perform the re-squiggling of raw currents against the used reference. The f5c eventalign program (version >= 1.5 for RNA004) has to be run with the following configuration and steps: 
+After that, all reads falling on the regions in the white-list and covering a given minimum percentage of the reference sequence will be retrieved and collected into the filtered output BAM file. The subsequent step is to launch the f5c eventalign program (Gamaarachchi et al., 2020, GitHub: https://github.com/hasindu2008/f5c) on this BAM file to perform the re-squiggling of raw currents against the selected reference. The f5c eventalign program (version >= 1.4 for RNA004) has to be run with the following configurations and steps: 
 A) FAST5/FASTQ files indexing:
 
 	f5c index -t 20 --iop 25 -d $FAST5 $FASTQ
@@ -139,12 +122,12 @@ B) Eventalign program:
 		--print-read-names \
 		--samples \
 		--signal-index \
-		--min-mapq 0 \ ##### --pore rna004 \ ADD FOR NEW ONT PORE
+		--min-mapq 0 \ ##### --pore rna004 \ ADD THIS LINE FOR THE NEW ONT RNA PORE
 		--summary $SUMMOUT > $EVOUT
 
-At the end of f5c computation, the eventalign table and its summary table will be provided to **NanoListener.py** main script which will produce an extended training datasets using re-squiggled events as anchors to extract and annotate, pairs of raw signals chunks directly from fast5 files and the annotated k-mer which putatively generated it. NanoListeners receives several inputs and configurations such as the required interval of chunks lengths and the pA-scale limit values to clip extracted currents chunks. Here an explaination of its functioning:
+At the end of f5c computation, the eventalign table and its summary table will be provided to **NanoListener.py** main script. It will produce an extended training datasets using re-squiggled events as anchors to extract and annotate, pairs of raw signals chunks directly from fast5 files along with their annotated k-mer. NanoListeners receives several inputs and configurations such as the required interval of chunks lengths and the pA-scale limit values to clip extracted currents chunks. Here an explaination of its functioning:
 
-*NanoListener.py*
+
 	python3 NanoListener.py -h
 	usage: NanoListener.py [-h] -e EVENTALIGN_FILEPATH [-s SUMMARY_TABLE_FILEPATH] [-t THREADS_N] [-ml MIN_LENGTH_CHUNKS] [-l MAX_LENGTH_CHUNKS]
 	                       [-m MOD_POS_TABLES_DIR] [-n N_READS_TO_PROCESS] [-c CLIP_OUTLIERS] -r REF_FILEPATH [-o OUTDIR_PREFIX]
@@ -181,8 +164,7 @@ At the end of f5c computation, the eventalign table and its summary table will b
 	                        -outdir_prefix: a <str> indicating the ouput directory prefix to use. By default the eventalign basename will be used
 	                        as prefix. [None]
 
-
-To annotate k-mers of each chunks for modified nucleotides, NanoListener expects in input the full-path for the directory containing tsv files with all the known position of alternative bases, and its symbol (1 or more modification can be used) at a per-read level. Counterwise, it will work in un-modifided mode. The tsv files (one for every read) have to be named as *read_id.tsv* and respect the following content where the first 2 columns indicate the mapping coordinates (0-based) and the third a given char for each expected modification:
+To annotate k-mers of each chunks for modified nucleotides, NanoListener expects in input the full-path for the directory containing tsv files with all the known positions for alternative bases, and its symbol (1 or more modification can be used) at a per-read level. Counterwise, it will work in un-modifided mode. The tsv files (one for every read) have to be named as *<read_id>.tsv* and respect the following content where the first 2 columns indicate the mapping coordinates (0-based) and the third one a given char for each expected modification:
 
 	Curlcake1	17	Y
 	Curlcake1	21	I
@@ -193,10 +175,10 @@ To annotate k-mers of each chunks for modified nucleotides, NanoListener expects
 	Curlcake1	45	D
 	Curlcake1	49	Y
 
- During its multi-thread computation, for every k-mer, NanoListeners will look inside these tables: if the k-mer contains modifications it will be annotated with the selected char identifing the modified nucleotide.
-The final output of NanoListener is directory named as <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks and containg one tsv file for each thread. These tsv files are composed of pairs (one line per pair) of padded chunks (to MAX_LENGTH_CHUNKS value) and additional columns containg chunks metadata and the extracted (and annotated if required) output k-mer.
+During its multi-thread computation, for every k-mer, NanoListeners will look inside these tables: if the k-mer contains any modification, it will be annotated with the selected char identifing the modified nucleotide.
+The final output of NanoListener is a directory named as <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks and containg one tsv file for each thread/worker. These tsv files are composed of pairs (one line per pair) of padded chunks (to MAX_LENGTH_CHUNKS value) and additional columns containg chunks metadata and the extracted (and annotated if required) output k-mer.
 
-These tsv files can be considered as intermediate training dataset which require additional filtering with the *nanolistener_cons_out_filt.py* accessory script, to eliminate possible duplicates or abnormal extracted chunks/k-mers. This scripts will also consolidate all the tsv intermediated file into training and test datasets containign all the examples derived from the analyzed sample. 
+These tsv files can be considered as intermediate training datasets which require additional filtering with the *nanolistener_cons_out_filt.py* accessory script. This will eliminate possible duplicates or abnormal extracted chunks/k-mers. This scripts will also consolidate all the intermediated tsv files into training and test datasets, containing in turn, all the examples derived from the analyzed sample. 
 
 	python3 nanolistener_cons_out_filt.py -h
 	usage: nanolistener_cons_out_filt.py [-h] -nld NANOLISTENER_CHUNKS_DIR -tml TARGET_MAX_LEN [-mb MOD_BASE] [-kli KMER_LEN_INTERVAL]
@@ -228,20 +210,21 @@ These tsv files can be considered as intermediate training dataset which require
 	  -o OUTSUFFIX, --outsuffix OUTSUFFIX
 	                        -outsuffix: a <str> with a suffix to be added to the output X and y merged and filtered datasets. [None]
 
-The *nanolistener_cons_out_filt.py* script saves output training and test datasets into the NanoListener main program output directory separating data (X_train or X_test files) from metada and k-mers (y_train, y_test):
+The *nanolistener_cons_out_filt.py* script saves output training and test datasets into the NanoListener main program output directory separating data (X_train or X_test files) from metada + k-mers (y_train, y_test):
 
 	1) <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks/X_train_<OUTSUFFIX>.tsv
 	2) <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks/X_test_<OUTSUFFIX>.tsv
 	3) <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks/y_train_<OUTSUFFIX>.tsv
 	4) <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks/y_test_<OUTSUFFIX>.tsv
 
- It's very likely that the final training dataset will be composed of a combination of different organisms and runs so, because of that, an additional accessory script is provided to unify filtered training/test datasets into a unique table ready to be used for training purposes. This is the *make_global_dataset.py* accessory script which takes in input this mandatory arguments:
+It's very likely that the final training dataset will be composed of a combination of different organisms and runs so, because of that, an additional accessory script is provided to unify filtered training/test datasets into a single tabular file, ready to be used for training and testing purposes. This is the *make_global_dataset.py* accessory script, which takes in input this mandatory arguments:
 	
-  	1) single_datasets_list_fp ====> a csv with one row for every dataset to be merged and 2 columns containing A) the sample/run name; B) the full-path for the directory with X_* / y_* filtered files
+  	 1) single_datasets_list_fp ===> a csv with one row for every dataset to be merged and 2 columns containing:
+    					 A) the sample/run name, B) the full-path to the NanoListener directory with X_* / y_* filtered files;
 	 2) outdir ====================> the output directory where the merged datasets will be saved;
 	 3) dataset_group =============> the dataset group (train or test, alternatively);
 	 4) dataset_suffix ============> if a suffix has been used provide it here;
-	 5) overwrite =================> whether the script can overwrite the output if already existing. (False or True, DANGER: if True be very careful!)
+	 5) overwrite =================> whether the script can overwrite the output if it does already exist. (False or True, ### DANGER ###: if True, be very careful!)
 
 In the output folder <outdir> the final merged, shuffled and consolidated training (or test, depending on the used <dataset_group>) dataset will be saved as: 
 
