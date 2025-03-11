@@ -176,7 +176,7 @@ To annotate k-mers of each chunks for modified nucleotides, NanoListener expects
 	Curlcake1	49	Y
 
 During its multi-thread computation, for every k-mer, NanoListeners will look inside these tables: if the k-mer contains any modification, it will be annotated with the selected char identifing the modified nucleotide.
-The final output of NanoListener is a directory named as <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks and containg one tsv file for each thread/worker. These tsv files are composed of pairs (one line per pair) of padded chunks (to MAX_LENGTH_CHUNKS value) and additional columns containg chunks metadata and the extracted (and annotated if required) output k-mer.
+The final output of NanoListener is a directory named as <BAM_FILE_NAME>.<MIN_LENGTH_CHUNKS>to<MAX_LENGTH_CHUNKS>.chunks and containing one tsv file for each thread/worker. These tsv files are composed of pairs (one line per pair) of padded chunks (to MAX_LENGTH_CHUNKS value) and additional columns storing chunks metadata and the extracted (and annotated if required) output k-mer.
 
 These tsv files can be considered as intermediate training datasets which require additional filtering with the *nanolistener_cons_out_filt.py* accessory script. This will eliminate possible duplicates or abnormal extracted chunks/k-mers. This scripts will also consolidate all the intermediated tsv files into training and test datasets, containing in turn, all the examples derived from the analyzed sample. 
 
@@ -221,7 +221,7 @@ It's very likely that the final training dataset will be composed of a combinati
 
   	 python3 make_global_dataset.py $1 $2 $3 $4 $5
 
-    	 where the 4 arguments are:
+    	 where the 5 arguments are:
 
   	 1) single_datasets_list_fp ===> a csv with one row for every dataset to be merged and 2 columns containing:
     					 A) the sample/run name, B) the full-path to the NanoListener directory with X_* / y_* filtered files;
