@@ -32,10 +32,10 @@ After the activation of the conda enviroment install the following softwares:
 		conda activate NanoListener
 
 		# install samtools
-		conda install -c bioconda samtools >= 1.21
+		conda install -c bioconda samtools==1.21
 
 		# install minimap2
-		conda install -c bioconda minimap2 == 2.24
+		conda install -c conda-forge minimap2==2.24
 
 		# install f5c
 		conda install -c bioconda f5c == 1.5
