@@ -12,7 +12,7 @@ Ionic currents needs to be re-squiggled onto the reference via f5c eventalign. N
 ## **Required Software**:
 NanoListener uses internally (and not) some software that should be installed preferably into a new conda enviroment. \
 After the activation of the conda enviroment install the following softwares:
-1) Python >= 3.9
+1) Python >= 3.8
 2) Samtools >= 1.21
 3) Minimap2 == 2.24
 4) f5c >= 1.5
