@@ -31,7 +31,7 @@ After the activation of the conda enviroment install the following softwares:
 		# activate the conda env
 		conda activate NanoListener
 
- 		# add conda channels
+		# add conda channels
    		conda config --add channels conda-forge
 		conda config --add channels bioconda
 
