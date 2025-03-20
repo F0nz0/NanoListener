@@ -26,7 +26,7 @@ After the activation of the conda enviroment install the following softwares:
 2) Create a new virtual environment (it's suggested to create, use and activate a base conda environment with all the required software):
 
 		# create a new conda environment
-		conda create --name NanoListener python=3.9
+		conda create --name NanoListener python=3.8
 
 		# activate the conda env
 		conda activate NanoListener
