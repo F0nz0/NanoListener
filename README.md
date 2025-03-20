@@ -31,14 +31,18 @@ After the activation of the conda enviroment install the following softwares:
 		# activate the conda env
 		conda activate NanoListener
 
+ 		# add conda channels
+   		conda config --add channels conda-forge
+		conda config --add channels bioconda
+
 		# install samtools
-		conda install -c bioconda samtools==1.21
+		conda install samtools==1.21
 
 		# install minimap2
-		conda install -c conda-forge minimap2==2.24
+		conda install minimap2==2.24
 
 		# install f5c
-		conda install -c bioconda f5c == 1.5
+		conda install f5c==1.5
 
 		# create virtual environment inside Conda NanoListener environment
 		python3 -m venv NanoListener_venv
