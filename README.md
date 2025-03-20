@@ -38,8 +38,8 @@ After the activation of the conda enviroment install the following softwares:
 		# install samtools
 		conda install samtools==1.21
 
-		# install minimap2
-		conda install minimap2==2.24
+		# install minimap2 (>=2.24)
+   		conda install bioconda::minimap2
 
 		# install f5c
 		conda install f5c==1.5
