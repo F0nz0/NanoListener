@@ -138,7 +138,7 @@ def consumer_worker(q, id_consumer, summary_table, out_dir, min_l, max_l, counte
         read_name = input_evread[0]
         eventalign_read = input_evread[1]
         if eventalign_read != None:
-            # load scale and shift for current read if provided
+            # try load summary for current read
             if not summary_table.empty:
                 try:
                     summary_table_curr_read = summary_table.query(f"read_name == '{read_name}'")
