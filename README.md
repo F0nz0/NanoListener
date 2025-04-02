@@ -21,7 +21,7 @@ After the activation of the conda enviroment install the following softwares:
 
 1) Download the source code from the GitHub repository at the url https://github.com/F0nz0/NanoListener:
 
-	git clone https://github.com/F0nz0/NanoListener.git
+		git clone https://github.com/F0nz0/NanoListener.git
 
 2) Create a new virtual environment (it's suggested to create, use and activate a base conda environment with all the required software):
 
