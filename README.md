@@ -250,4 +250,9 @@ If you are in trouble, or if you are interested in applying our system to your u
 ### **Terms and Licence**:
 Research Purpose Only.
 
+This work is licensed under the Creative Commons Attribution - Non-Commercial 4.0 International License (CC BY-NC 4.0).
+For any commercial use or license request for market activities, interested parties are invited to contact the Technology Transfer Office (TTO) of the University of Bari Aldo Moro, copyright holder. For a copy of the license, please visit https://creativecommons.org/licenses/by-nc/4.0/
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
