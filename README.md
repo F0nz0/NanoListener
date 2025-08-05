@@ -255,4 +255,6 @@ For any commercial use or license request for market activities, interested part
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
+### **Citation**:
+If you wish to cite this work, please refer to the following preprint: Picardi, Fonzino et al., Ab initio detection of multiple epitranscriptomic modifications from ONT direct RNA sequencing data (2025):
+https://doi.org/10.21203/rs.3.rs-6343479/v1
