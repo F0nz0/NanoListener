@@ -17,7 +17,19 @@ outdir = sys.argv[2]
 dataset_group = sys.argv[3]
 dataset_suffix = sys.argv[4]
 overwrite = sys.argv[5]
+remove_unshuffled = (
+    sys.argv[6].lower() in ["true", "1", "yes", "y"]
+    if len(sys.argv) > 6 else False
+)
 
+print("Start Processing...\n")
+
+if remove_unshuffled:
+    print("Removing unshuffled concatenated file")
+else:
+    print("Unshuffled concatenated file will be retained")
+
+print("")
 print(f"Dataset group: {dataset_group}")
 
 df_out_folder = os.path.join(outdir, f"df_{dataset_group}")
@@ -139,6 +151,7 @@ print("Region distribution after shuffling:")
 os.system(f"cat {concat_merged_x_y_meta_shuffled_filepath} | cut -f {int(c_max)+1} | sort | uniq -c")
 
 # %%
-print("Removing concat not shuffled x_y merged dataset...")
-os.system(f"rm {concat_merged_x_y_meta_filepath}")
+if remove_unshuffled:
+    print("Removing concat not shuffled x_y merged dataset...")
+    os.system(f"rm {concat_merged_x_y_meta_filepath}")
 print("Computation finished.")
