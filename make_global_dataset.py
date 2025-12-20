@@ -1,5 +1,6 @@
 # %%
 # import needed modules
+from __init__ import __version__
 import os,glob,sys, shutil
 from glob import glob
 from datetime import datetime
@@ -22,6 +23,8 @@ remove_unshuffled = (
     if len(sys.argv) > 6 else False
 )
 
+print(f"[{datetime.now()}] NanoListener {__version__}", flush=True)
+print(f"[{datetime.now()}] make_global_dataset.py program.", flush=True)
 print("Start Processing...\n")
 
 if remove_unshuffled:

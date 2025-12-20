@@ -1,0 +1,20 @@
+CanonicalBase,ModificationName,ModificationCharNanoSpeech,Dorado_code (pseudo ChEBI)
+,Silence Symbol,-,
+,Start Symbol,<,
+,Stop Symbol,>,
+A,Canonical,A,
+C,Canonical,C,
+G,Canonical,G,
+T,Canonical,T,
+A,Inosine,I,17596
+A,m6A,M,a
+T,m5U,X,
+C,ac4C,D,
+T,m1Y,Z,
+C,hm5C,E,
+T,pU,Y,17802
+C,m5C,F,m
+C,2OmeC,R,19228
+A,2OmeA,K,69426
+T,2OmeU,W,19227
+G,2OmeG,B,19229

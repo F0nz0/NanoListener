@@ -1,6 +1,2 @@
 NanoListener_venv
-CreateModPosTablesFrom*Calls.py
-MODS_CODE.csv
-sample_bam_by_contig.py
-split_bam_file.py
-GetNucleotidesDistributionsFromNanoListenerFinalDS.py
+CreateModPosTablesFromDoradoCalls.py

@@ -1,3 +1,4 @@
+from __init__ import __version__
 import os,pysam
 from datetime import datetime
 import pandas as pd
@@ -42,7 +43,7 @@ if __name__ == "__main__":
     # bam_filepath, min_length = 1000, min_coverage = 90, 
     # min_numreads = 20, min_meandepth = 15, min_meanbaseq = 15, min_meanmapq = 40
 
-    parser = argparse.ArgumentParser(description=f"create_transcript_white_list_KO")
+    parser = argparse.ArgumentParser(description=f"NanoListener {__version__}: create_transcript_white_list.py program.")
 
     parser.add_argument("-b",
                         "--bam_filepath",
@@ -104,7 +105,8 @@ if __name__ == "__main__":
     min_meanmapq = args.min_meanmapq
 
     # print some starting info related to version, used program and to the input arguments
-    print(f"[{datetime.now()}] create_transcript_white_list_KO.py program.", flush=True)
+    print(f"[{datetime.now()}] NanoListener version {__version__}.", flush=True)
+    print(f"[{datetime.now()}] create_transcript_white_list.py program.", flush=True)
     print(f"[{datetime.now()}] Input arguments:", flush=True)
     for argument in args.__dict__.keys():
         print(f"\t- {argument} --> {args.__dict__[argument]}", flush=True)

@@ -1,4 +1,5 @@
 # import basic modules
+from __init__ import __version__,__author__
 import os, argparse
 from glob import glob
 import pandas as pd
@@ -167,7 +168,7 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="nanolistener_cons_out_filt.py. A program to filter and balance consumers outputs produced by NanoListener before NanoSpeech model training. It merges all the selected consumer outputs into X and y_meta dataframes and it then splits them into X_train, X_test, y_train_meta and y_test_meta datasets saving these on disk at the same folder-path of the NanoListener chunks directory.")
+    parser = argparse.ArgumentParser(description=f"NanoListener {__version__}: nanolistener_cons_out_filt.py. A program to filter and balance consumers outputs produced by NanoListener before NanoSpeech model training. It merges all the selected consumer outputs into X and y_meta dataframes and it then splits them into X_train, X_test, y_train_meta and y_test_meta datasets saving these on disk at the same folder-path of the NanoListener chunks directory.")
 
     parser.add_argument("-nld",
                         "--nanolistener_chunks_dir",
@@ -261,6 +262,8 @@ if __name__ == "__main__":
         outsuffix = None
 
     # print some starting info related to version, used program and to the input arguments
+    print(f"[{datetime.now()}] NanoListener {__version__}.", flush=True)
+    print(f"[{datetime.now()}] Author: {__author__}.", flush=True)
     print(f"[{datetime.now()}] nanolistener_cons_out_filt.py program.", flush=True)
     print(f"[{datetime.now()}] Input arguments:", flush=True)
     for argument in args.__dict__.keys():

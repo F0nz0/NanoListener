@@ -1,4 +1,5 @@
 # import basic modules
+from __init__ import __version__, __author__
 import os, sys, pysam, argparse, shutil
 import pandas as pd
 from datetime import datetime
@@ -268,7 +269,8 @@ def eventalign_to_chunks(eventalign_path, summary_table_path=None,
     else:
         out_dir = f"{outdir_prefix}.{min_l}to{max_l}.chunks"
     # print some starting messages
-    print(f"[{datetime.now()}] [Main Process Message] NanoListener program.", flush=True)
+    print(f"[{datetime.now()}] [Main Process Message] NanoListener program {__version__}.", flush=True)
+    print(f"[{datetime.now()}] [Main Process Message] \tAuthor {__author__}.", flush=True)
     print(f"[{datetime.now()}] [Main Process Message] Input eventalign file: {eventalign_path}", flush=True)
     print(f"[{datetime.now()}] [Main Process Message] Input summary eventalign file: {summary_table_path}", flush=True)
     print(f"[{datetime.now()}] [Main Process Message] Output folder for eventalign collapsed reads: {out_dir}", flush=True)
@@ -347,7 +349,7 @@ def eventalign_to_chunks(eventalign_path, summary_table_path=None,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="NanoListener. A features extractor from eventalign and fast5 files: chunks of a given length will be extracted along with related sequence and other useful informations. These chunks can be used to train a model from ionic currents measurements.")
+    parser = argparse.ArgumentParser(description=f"NanoListener {__version__}\nAuthor: {__author__}.\nA features extractor from eventalign and fast5 files: chunks of a given length will be extracted along with related sequence and other useful information. These chunks can be used to train a model from ionic currents measurements.")
     
     parser.add_argument("-e",
                         "--eventalign_filepath",

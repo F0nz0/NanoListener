@@ -1,4 +1,5 @@
 # import basic modules
+from __init__ import __version__
 import pysam, os, argparse
 import pandas as pd
 from datetime import datetime
@@ -84,7 +85,7 @@ def filter_bam_file_by_perc_map(fasta_filepath, bam_filepath, perc_threshold=0.3
 
 if __name__ == "__main__":
     #fasta_filepath, bam_filepath, perc_threshold=0.3, region_list=None, filt_bam_file_suffix=None
-    parser = argparse.ArgumentParser(description=f"filter_bam_file_by_perc_map")
+    parser = argparse.ArgumentParser(description=f"NanoListener {__version__}: filter_bam_file_for_training_dataset.py program.")
 
     parser.add_argument("-f",
                         "--fasta_filepath",
@@ -131,7 +132,8 @@ if __name__ == "__main__":
         filt_bam_file_suffix = None
 
     # print some starting info related to version, used program and to the input arguments
-    print(f"[{datetime.now()}] filter_bam_file_by_perc_map.py program.", flush=True)
+    print(f"[{datetime.now()}] NanoListener version {__version__}.", flush=True)
+    print(f"[{datetime.now()}] filter_bam_file_for_training_dataset.py program.", flush=True)
     print(f"[{datetime.now()}] Input arguments:", flush=True)
     for argument in args.__dict__.keys():
         print(f"\t- {argument} --> {args.__dict__[argument]}", flush=True)
