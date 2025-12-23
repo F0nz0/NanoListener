@@ -7,10 +7,10 @@ import numpy as np
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 
-# define a useful function to make datasets of diffent chunks uniform in length
+# define a useful function to make datasets of different chunks uniform in length
 def lengthen_chunks(df, targent_len=5000, input_chunk_len=2500):
     '''
-    A function to make NanoListener dataframes longer to a target length (for instance, from 2.5k to 5k).
+    A function to make NanoListener dataframes longer to a target length padding currents signals to the same target length (for instance, from 2.5k to 5k).
     '''
     if not targent_len > input_chunk_len:
         raise Exception("Error! Please target len have to be longer than starting chunk length.")
@@ -42,6 +42,8 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
     NanoSpeech model training. It will merge selected cons. outputs into X and y_meta
     dataframes and it will split them into X_train, X_test, y_train_meta and y_test_meta
     datasets on disk at the same folderpath of the nanolistener chunks directory.
+    It can also perform a padding to uniform lengths of signals, balancing of the chunks on regions,
+    subsampling to a given amount of chunks, or filtering based on the content of modified bases.
     '''
     start_time = datetime.now()
     if not outsuffix:
@@ -84,25 +86,31 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
             # detect chunks length
             lens = [int(i) for i in os.path.basename(nanolistener_chunks_dir).split(".")[-2].split("to")]
             print(f"[{datetime.now()}] Chunks min and Max lengths detected:", lens, flush=True)
-            # load data chuncks
+            # load data chunks
             print(f"[{datetime.now()}] Loading consumer output in memory.", flush=True)
             df = pd.read_table(cons_out, header=None)
-            # scale to 5k-long chunks if needed
+            print(f"[{datetime.now()}] Starting shape: {df.shape}.", flush=True)
+            # scale to target_max_len-long chunks if needed
             if lens[1] < target_max_len:
                 print(f"[{datetime.now()}] Lengthening of chunks needed from {lens[1]} to {target_max_len}.", flush=True)
                 df = lengthen_chunks(df, targent_len=target_max_len, input_chunk_len=lens[1])
+                print(f"[{datetime.now()}] Shape after lengthening of chunks: {df.shape}.", flush=True)
             # select only chunks containing modified base if requested
             if mod_base:
-                print(f"[{datetime.now()}] Retaining only chunks with at least one {mod_base}. Starting shape: {df.shape}.")
-                df = df[df.iloc[:,-1].str.contains(mod_base)].copy()
-                print(f"[{datetime.now()}] df shape after mod_base containing chunks selection: {df.shape}.")
+                print(f"[{datetime.now()}] Retaining only chunks with at least one '{mod_base}'. Shape before filtering: {df.shape}.", flush=True)
+                if mod_base == "All":
+                    print(f"[{datetime.now()}] mod_base == 'All' --> Chunks with at least on symbol not in ACGT will be retained.", flush=True)
+                    df = df[df.iloc[:,-1].str.contains(r'[^ACGT]')].copy()
+                else:
+                    df = df[df.iloc[:,-1].str.contains(mod_base)].copy()
+                print(f"[{datetime.now()}] df shape after mod_base containing chunks selection: {df.shape}.", flush=True)
             # remove duplicates
             df.drop_duplicates(inplace=True)
             df.reset_index(inplace=True, drop=True)
             print(f"[{datetime.now()}] df shape after duplicates removal:", df.shape, flush=True)
             # retain only lengths within an interval
             if kmer_len_interval:
-                print(f"[{datetime.now()}] Filtering out chunks outsite the given kmer length [min,max]: {kmer_len_interval}.", flush=True)
+                print(f"[{datetime.now()}] Filtering out chunks outside the given kmer length [min,max]: {kmer_len_interval}.", flush=True)
                 df = df[(df.iloc[:,-1].apply(len)>=kmer_len_interval[0])&(df.iloc[:,-1].apply(len)<=kmer_len_interval[1])].copy()
                 print(f"[{datetime.now()}] df shape after seqs length filtering:", df.shape, flush=True)
             # balancing
@@ -115,7 +123,7 @@ def nanolistener_cons_out_filt(nanolistener_chunks_dir, target_max_len=5000, mod
                     df = df.apply(lambda x: x.sample(df.size().min())).reset_index(drop=True)
             print(f"[{datetime.now()}] df stats after filtering (start coords stats):\n", df.groupby(df.shape[1]-8)[df.shape[1]-7].describe(), flush=True)
             print(f"[{datetime.now()}] df shape after filtering:", df.shape, flush=True)
-            # if needed select a ranodom sample with n chunks
+            # if needed select a random sample with n chunks
             if sample_n:
                 #print(type(sample_n)) #### DEVELOPMENT/TEST
                 if sample_n < df.shape[0]:
@@ -188,7 +196,7 @@ if __name__ == "__main__":
                         "--mod_base", 
                         required=False,
                         default=None,
-                        help="--mod_base: \t a <str> indicating the modified base to be searched into output kmer (at least one mod_base needed to mantain the chunks). [None]")
+                        help="--mod_base: \t a <str> indicating the modified base to be searched into output kmer (at least one 'mod_base' needed to maintain the chunk). Use 'All' to discard unmodified chunks and retain only examples containing at least one non-canonical base (canonical ones are: ACGT). If not defined (None) the program will retain both modified and unmodified chunks. [None]")
 
 
     parser.add_argument("-kli",
